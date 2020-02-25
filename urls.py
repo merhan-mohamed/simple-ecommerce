@@ -1,11 +1,16 @@
 from django.urls import path
-from . import views
-from .views import signup
 
-app_name ='accounts'
+from Cart.views import OrderSummaryView, CheckoutView, PaymentView, AddCouponView, RequestRefundView
+from . import views
+app_name = 'Cart'
 urlpatterns = [
-    path('signup', views.signup, name='signup'),
-    path('login', views.login, name='login'),
-    path('logout', views.logout, name='logout'),
-    path('profile/<slug:slug>', views.profile, name='profile'),
-]
+
+    path('add_to_cart/<slug:slug>/', views.add_to_cart, name='add_to_cart'),
+    path('remove_from_cart/<slug:slug>/', views.remove_from_cart, name='remove_from_cart'),
+    path('order_summary/', OrderSummaryView.as_view(), name='order_summary'),
+    path('remove_single_item_from_cart/<slug:slug>/', views.remove_single_item_from_cart, name='remove_single_item_from_cart'),
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
+    path('payment/<str:payment_option>/', PaymentView.as_view(), name='payment'),
+    path('add_coupon/',AddCouponView.as_view(), name='add_coupon'),
+    path('RequestRefund/',RequestRefundView.as_view(), name='RequestRefund')
+ ]
