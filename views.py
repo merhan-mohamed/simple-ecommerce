@@ -1,21 +1,34 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product
-from django.core.paginator import Paginator
-
-def index(request):
-    return render(request, 'base.html', {})
-
-
-def product_list(request):
-    product_list = Product.objects.all()
-    paginator = Paginator(product_list, 2)
-    page = request.GET.get('page')
-    product_list = paginator.get_page(page)
-    return render(request,'Product/product_list.html',{'product_list':product_list})
-
-def product_details(request,slug):
-    data = Product.objects.get(PRDSlug=slug)
-    return render(request,'Product/product_details.html',{'product_details':data})
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from accounts.models import Profile
+from django.contrib.auth.decorators import login_required
 
 
+def signup(request):
+    if request.method =='POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            #form.save()
+            #username = form.cleaned_data.get('username')
+            #password = form.cleaned_data.get('password')
+            #user = authenticate(username=username, password=password)
+            user = form.save()
+            login(request,user,backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('/product')
 
+    else:
+        form = UserCreationForm()
+    context = {'form': form}
+    return render(request, 'Registration/signup.html', context)
+
+
+
+
+
+@login_required(login_url='/accounts/login/')
+def profile(request,slug):
+    profile = get_object_or_404(Profile,slug=slug)
+    return render(request, 'Registration/profile.html', {'profile':profile})
+def logout(request):
+    return render(request,'logged_out.html',{})
