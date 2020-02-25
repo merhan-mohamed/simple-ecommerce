@@ -1,11 +1,18 @@
 from django.urls import path
-from . import views
-from .views import signup
 
-app_name ='accounts'
+from .views import product_list, product_details, index
+app_name = 'products'
+
 urlpatterns = [
-    path('signup', views.signup, name='signup'),
-    path('login', views.login, name='login'),
-    path('logout', views.logout, name='logout'),
-    path('profile/<slug:slug>', views.profile, name='profile'),
+    path('', product_list,name='product'),
+    path('product_details/<slug:slug>/', product_details, name='product_details'),
+    path('index/', index, name='index'),
+
+
+
 ]
+
+
+
+
+
